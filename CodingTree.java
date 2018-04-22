@@ -22,6 +22,10 @@ public class CodingTree {
 
     }
     /**
+     * @param node the Huffman Tree node.
+     */
+    public Node node;
+    /**
      * @param codes A map of characters in the message with their binary codes.
      */
 
@@ -47,10 +51,11 @@ public class CodingTree {
     }
 
     /**
-     * 
+     * Builds a Huffman tree given some weights and an alphabet.
+     * @param priQueue A priority queue of
      */
-    public void buildHuffmanTree () {
-
+    public void buildHuffmanTree (MyPriorityQueue<Node> priQueue) {
+        
     }
 
     /**
@@ -61,10 +66,10 @@ public class CodingTree {
         HashMap<Character,Integer> count = new HashMap<>();
         //for (char c: message.toCharArray()) 
         message.chars().forEachOrdered(c -> {
-            if (!count.containsKey((char)c)) { 
-                count.put((char)c,1); 
-            } else { 
+            if (count.containsKey((char)c)) { 
                 count.put((char)c,count.get((char)c)+1);
+            } else { 
+                count.put((char)c,1);
             }
         });
         return count;
