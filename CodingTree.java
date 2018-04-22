@@ -6,6 +6,10 @@ import java.util.PriorityQueue;
 
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature
 //javac CodingTree.java
+
+/**
+ * @author Jake McKenzie
+ */
 public class CodingTree {
     /**
      * A constructor that takes the text of a message to be compressed. 
@@ -40,5 +44,29 @@ public class CodingTree {
         String temp = "";
 
         return temp;
+    }
+
+    /**
+     * 
+     */
+    public void buildHuffmanTree () {
+
+    }
+
+    /**
+     * This method will count the characters in my string
+     * @param message the message encoded by the huffman tree
+     */
+    public Map<Character,Integer> tallyChar(String message) {
+        HashMap<Character,Integer> count = new HashMap<>();
+        //for (char c: message.toCharArray()) 
+        message.chars().forEachOrdered(c -> {
+            if (!count.containsKey((char)c)) { 
+                count.put((char)c,1); 
+            } else { 
+                count.put((char)c,count.get((char)c)+1);
+            }
+        });
+        return count;
     }
 }
