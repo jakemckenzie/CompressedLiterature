@@ -5,13 +5,9 @@ In this assignment I will implement Huffman’s coding algorithm in a CodingTree
 
 (1)counting the frequency of characters in a text file.
 
-(2)creating one tree for each character with a non-zero count.
+(2)creating one tree for each character with a non-zero count where the tree has one node in it and a weight equal to the character’s count.
 
-	(I)the tree has one node in it and a weight equal to the character’s count.
-
-(3)repeating the following step until there is only a single tree:
-
-	(I)merge the two trees with minimum weight into a single tree with weight equal tothe sum of the two tree weights by creating a new root and adding the two treesas left and right subtrees.
+(3)repeating the following step until there is only a single tree: merge the two trees with minimum weight into a single tree with weight equal tothe sum of the two tree weights by creating a new root and adding the two treesas left and right subtrees.
 
 (4)labelling the single tree’s left branches with a 0 and right branches with a 1 and readingthe code for the characters stored in leaf nodes from the path from root to leaf.
 
