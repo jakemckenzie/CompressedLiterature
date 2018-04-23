@@ -121,6 +121,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     /**
      * @return Returns back the current node for peeking.
      */
+    
     public T peek() {
         return (this.size == 0) ? null : queue.get(0);
     }
@@ -151,7 +152,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * @return the comparison on the left and right child
      * TODO: fix unchecked error with compare
      */
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public int compare(T L, T R) {
         if (comparator != null) {
             return comparator.compare(L,R);
