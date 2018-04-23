@@ -151,6 +151,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * Compares values of two nodes.
      * @return the comparison on the left and right child
      * TODO: fix unchecked error with compare
+     * TODO: make compare better
      */
     //@SuppressWarnings("unchecked")
     public int compare(T L, T R) {
