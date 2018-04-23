@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
+//import java.util.List;
 import java.util.PriorityQueue;
 
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature
@@ -16,11 +16,17 @@ public class CodingTree {
      * The constructor is responsible for calling all private methods 
      * that carry out the Huffman coding algorithm.
      * @param message the message encoded by the huffman tree
+     * TODO: fill in the rest of the Coding Tree constructor
      */
 
     public CodingTree(String message) {
         node = null;
         codes = new HashMap<Character,String>();
+        Map<Character,Integer> count = tallyChar(message);
+        MyPriorityQueue<Node> queue = new MyPriorityQueue<Node>();
+        for (char c:count.keySet()) queue.offer(new Node(c,queue.get(c)));
+        //bits = new ArrayList<Byte>();
+        
     }
     /**
      * @param node the Huffman Tree node.
@@ -36,13 +42,14 @@ public class CodingTree {
      * @param bits A message encoded using Huffman codes.
      */
 
-    public List<Byte> bits;
+    public ArrayList<Byte> bits;
 
     /**
      * ******************************EXTRA CREDIT**************************** 
      * This method will take the output of Huffman’s encoding and produce the original text.
      * @param bits A message encoded using Huffman codes.
      * @param codes A map of characters in the message with their binary codes.
+     * TODO: Fill in the rest of the decode function.
      */
 
     public String decode(String bits, Map<Character,String> codes) {
@@ -54,6 +61,7 @@ public class CodingTree {
     /**
      * Builds a Huffman tree given some weights and an alphabet.
      * @param priQueue A priority queue of
+     * TODO: fill in the rest of buildHuffmanTree function
      */
     public void buildHuffmanTree(MyPriorityQueue<Node> queue) {
         //Node tempL =
@@ -111,7 +119,7 @@ public class CodingTree {
         /**
         * Returns true if the receiver is a leaf.
         */
-        private boolean isLeaf() {
+        public boolean isLeaf() {
             assert ((L == null) && (R == null)||((L != null) && (R != null)));//Should never trigger. For testing.
             return ((L == null) && (R == null));
         }
@@ -119,7 +127,7 @@ public class CodingTree {
         * Returns a string representation of the node.
         */
         public String toString() {
-            return (key + ": " + count);
+            return (key + " | " + count);
         }
         /**
          * This returns the maximum codelength of the current huffman tree.

@@ -1,4 +1,9 @@
-import java.util.*;
+import java.util.Comparator;
+import java.util.AbstractQueue;
+import java.util.Queue;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * ******************************EXTRA CREDIT**************************** 
  * @author Jake McKenzie
@@ -18,15 +23,21 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
      * Constructor that initializes the queue
      */
     public MyPriorityQueue() {
-        //size = 0;
         queue = new ArrayList<T>();
-        //queue.add(null);
     }
+    /**
+     * Iterator for the abstract queue.
+     * TODO: fill in the rest of the iterator.
+     */
     
     @Override
     public Iterator<T> iterator() {
         return null;
     }
+    /**
+     * Returns back the size of the current queue.
+     * TODO: fill in the size() function
+     */
     @Override
     public int size() {
         return 0;
@@ -92,11 +103,20 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
         }
         return t;
     }
+    /**
+     * Returns back the current node for peeking.
+     * TODO: fill in the Peek function.
+     */
     @Override
     public T peek() {
         return null;
     }
+    /**
+     *  Compares values of two nodes.
+     */
+    @SuppressWarnings("unchecked")
     public int compare(T L, T R) {
+
         if (comparator != null) {
             return comparator.compare(L,R);
         } else {
