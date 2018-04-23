@@ -7,6 +7,7 @@ import java.util.Iterator;
 /**
  * ******************************EXTRA CREDIT**************************** 
  * @author Jake McKenzie
+ * @param T generic type 
  */
 
 public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
@@ -21,9 +22,12 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
     Comparator<T> comparator = null;
     /**
      * Constructor that initializes the queue
+     * "UTF-8 is a variable width character encoding 
+     * capable of encoding all 1,112,064"
+     * https://en.wikipedia.org/wiki/UTF-8
      */
     public MyPriorityQueue() {
-        queue = new ArrayList<T>();
+        queue = new ArrayList<T>(0x10F800);//1112064
     }
     /**
      * Iterator for the abstract queue.
@@ -59,11 +63,11 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
         queue.add(t);
         //size++;
         int child = queue.size() - 1;
-        int parent = (int)Math.floor(child>>1);//talked about this in seminar
+        int parent = parent(child);
         while (compare(queue.get(parent),queue.get(child)) > 0 && 0 <= parent) {
             swap(child,parent);
             child = parent;
-            parent = (int)Math.floor(child>>1);
+            parent = parent(child);
         }
         return true;
     }
@@ -110,6 +114,26 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
     @Override
     public T peek() {
         return null;
+    }
+    /**
+     * talked about in seminar
+     * @param c child
+     * @return index of the parent
+     */
+    public int parent(int c) {
+        return (c - 1) >> 1;
+    }
+    /**
+     * @param p parent index
+     */
+    public int leftChild(int p) {
+        return (p << 1) + 1;
+    }
+    /**
+     * @param p parent index
+     */
+    public int rightChild(int p) {
+        return (p << 1) + 2;
     }
     /**
      *  Compares values of two nodes.
