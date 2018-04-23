@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature
-//javac CodingTree.java
+//javac CodingTree.java Main.java MyPriorityQueue.java
 
 /**
  * @author Jake McKenzie
@@ -55,8 +55,8 @@ public class CodingTree {
      * Builds a Huffman tree given some weights and an alphabet.
      * @param priQueue A priority queue of
      */
-    public void buildHuffmanTree(MyPriorityQueue<Node> priQueue) {
-
+    public void buildHuffmanTree(MyPriorityQueue<Node> queue) {
+        //Node tempL =
     }
 
     /**
@@ -112,7 +112,7 @@ public class CodingTree {
         * Returns true if the receiver is a leaf.
         */
         private boolean isLeaf() {
-            assert ((L == null) && (R == null)||((L != null) && (R != null)));
+            assert ((L == null) && (R == null)||((L != null) && (R != null)));//Should never trigger. For testing.
             return ((L == null) && (R == null));
         }
         /**
@@ -121,6 +121,44 @@ public class CodingTree {
         public String toString() {
             return (key + ": " + count);
         }
+        /**
+         * This returns the maximum codelength of the current huffman tree.
+         * 
+         * Used for testing.
+         * 
+         * 1. No huffman code can be longer than alphabetsize-1.
+         * 2. The maximum length of the code also depends on the 
+         * number of samples you use to derive your statistics from; 
+         * the sequence is as follows (the samples include the fake 
+         * samples to give each symbol a nonzero probability!):
+         * TODO: look into ceil(log(alphabetsize))
+         * http://www.compressconsult.com/huffman/#maxlength
+         */
+        public int getMax() {
+            int max = 0;
+            Object[] keys = codes.values().toArray();
+            for (int i = 0; i < keys.length; i++) if (max < keys[i].toString().length()) max = keys[i].toString().length();
+            return max;  
+        }
+        /**
+         * This returns the average codelength of the current huffman tree.
+         * 
+         * Used for testing.
+         * 
+         * "To precisely compare the new code with the standard encoding,
+         * we can compute the average number of bits/symbol of the codes.
+         * The standard coding always uses 2 bits, so obviously the average 
+         * number of bits per symbol is also 2"
+         * https://www.princeton.edu/~cuff/ele201/kulkarni_text/information.pdf
+         * https://softwareengineering.stackexchange.com/questions/237543/how-do-i-find-average-bits-per-symbol-using-huffman-code
+         */
+        public double getAvg() {
+            double sum = 0.0d;
+            Object[] keys = codes.values().toArray();
+            for (int i = 0; i < keys.length; i++) sum+=(double)keys[i].toString().length();
+            return (sum / keys.length);
+        }
+
         /**
         * Compares this node with the specified node for order.
         */
