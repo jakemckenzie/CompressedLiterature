@@ -24,7 +24,7 @@ public class CodingTree {
         codes = new HashMap<Character,String>();
         Map<Character,Integer> count = tallyChar(message);
         MyPriorityQueue<Node> queue = new MyPriorityQueue<Node>();
-        for (char c:count.keySet()) queue.offer(new Node(c,queue.get(c)));
+        for (char c:count.keySet()) queue.offer(new Node(c,count.get(c)));
         //bits = new ArrayList<Byte>();
         
     }

@@ -10,7 +10,7 @@ import java.util.Iterator;
  * @param T generic type 
  */
 
-public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
+public class MyPriorityQueue<T extends Comparable<T>> {
     /**
      *@param queue the priority queue 
      */
@@ -18,8 +18,12 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
     /**
      * @param comparator reference for queue 
      */
-    //public int size;
+    
     Comparator<T> comparator = null;
+    /**
+     * The size of the queue
+     */
+    public int size;
     /**
      * Constructor that initializes the queue
      * "UTF-8 is a variable width character encoding 
@@ -34,18 +38,25 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
      * TODO: fill in the rest of the iterator.
      */
     
-    @Override
-    public Iterator<T> iterator() {
-        return null;
+    //@Override
+    //public Iterator<T> iterator() {
+    //    return null;
+    //}
+    /**
+     * @return Returns true if, and only if, length() is 0.
+     */
+    public boolean isEmpty() {
+        assert(size !=0 && size == 0);
+        return this.size == 0;
     }
     /**
      * Returns back the size of the current queue.
      * TODO: fill in the size() function
      */
-    @Override
-    public int size() {
-        return 0;
-    }
+    //@Override
+    //public int size() {
+    //    return 0;
+    //}
     /**
      * Constructor that builds queue given a limit.
      * @param limit the maximum size of the queue
@@ -108,12 +119,10 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
         return t;
     }
     /**
-     * Returns back the current node for peeking.
-     * TODO: fill in the Peek function.
+     * @return Returns back the current node for peeking.
      */
-    @Override
     public T peek() {
-        return null;
+        return (this.size == 0) ? null : queue.get(0);
     }
     /**
      * talked about in seminar
@@ -125,22 +134,25 @@ public class MyPriorityQueue<T> extends AbstractQueue<T> implements Queue<T> {
     }
     /**
      * @param p parent index
+     * @return left child
      */
     public int leftChild(int p) {
         return (p << 1) + 1;
     }
     /**
      * @param p parent index
+     * @return right child
      */
     public int rightChild(int p) {
         return (p << 1) + 2;
     }
     /**
-     *  Compares values of two nodes.
+     * Compares values of two nodes.
+     * @return the comparison on the left and right child
+     * TODO: fix unchecked error with compare
      */
     @SuppressWarnings("unchecked")
     public int compare(T L, T R) {
-
         if (comparator != null) {
             return comparator.compare(L,R);
         } else {
