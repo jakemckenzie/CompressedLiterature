@@ -113,7 +113,12 @@ public class CodingTree {
      */
     public Map<Character,Integer> tallyChar(String message) {
         HashMap<Character,Integer> count = new HashMap<>();
-        message.chars().forEachOrdered(c -> {if (count.containsKey((char)c)) count.put((char)c,count.get((char)c)+1);else count.put((char)c,1);});
+        message.chars().forEachOrdered(c -> {
+            if (count.containsKey((char)c)) 
+                count.put((char)c,count.get((char)c)+1);
+            else 
+                count.put((char)c,1);
+        });
         return count;
     }
     /**

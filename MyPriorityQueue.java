@@ -4,8 +4,7 @@ import java.util.Queue;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * ******************************EXTRA CREDIT**************************** 
+/********************************EXTRA CREDIT****************************
  * @author Jake McKenzie
  * @param T generic type 
  */
@@ -27,7 +26,8 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     /**
      * Constructor that initializes the queue
      * "UTF-8 is a variable width character encoding 
-     * capable of encoding all 1,112,064"
+     * capable of encoding all 1,112,064 valid code 
+     * points in Unicode using one to four 8-bit bytes"
      * https://en.wikipedia.org/wiki/UTF-8
      */
     public MyPriorityQueue() {
@@ -62,8 +62,8 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * @param limit the maximum size of the queue
      * @param c reference for the queue
      */
-    public MyPriorityQueue(int limit, Comparator <T> c) {
-        queue = new ArrayList<T>(limit+1);
+    public MyPriorityQueue(int z, Comparator <T> c) {
+        queue = new ArrayList<T>(z+1);
         comparator = c;
     }
     /**
