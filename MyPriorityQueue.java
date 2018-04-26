@@ -31,7 +31,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * https://en.wikipedia.org/wiki/UTF-8
      */
     public MyPriorityQueue() {
-        queue = new ArrayList<T>(0x10F800);//1112064
+        queue = new ArrayList<T>(0xFF);//1112064
     }
     /**
      * Iterator for the abstract queue.

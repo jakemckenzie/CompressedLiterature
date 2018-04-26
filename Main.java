@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.text.DecimalFormat;
 
 /**
  * @author Jake McKenzie
@@ -54,6 +57,8 @@ public class Main {
      * to compress due to it being in portuguese. This text is nearly as long as War 
      * and Peace but due to it being written in a romantic language is quite varied
      * despite that length.
+     * 
+     * Entropy = 4.630160747136568
      */
 
     private static final String OsMaias = "OsMaias.txt";
@@ -66,6 +71,8 @@ public class Main {
      * includes a lot of spacing. 
      * 
      * Entropy = 4.488574651647057
+     * 
+     * All of these books happen to be on my current to read pile.
      */
 
     private static final String TheStoryOfTheVolsungs = "TheStoryOfTheVolsungs.txt";
@@ -79,32 +86,45 @@ public class Main {
         //https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
         //http://www.adam-bien.com/roller/abien/entry/java_8_reading_a_file
         //getBytes("UTF-8")
-        File file = new File(OsMaias);
-        String message = new String(Files.readAllBytes(Paths.get(OsMaias)));
-        final byte[] bytes = Files.readAllBytes(Paths.get(OsMaias));
+        File file = new File(WarAndPeace);
+        //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
+        final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
         //System.out.println(message);
         final int[] frequency = new int[256];
         //bytes
-        for (byte b : bytes) {
-            frequency[b & 0xFF]++;
-        }
+        for (byte b : message) frequency[b & 0xFF]++;
         int o = 0;
+        System.out.println("\nChars from War and Peace");
+        System.out.println("#|Char|Count|Entropy\n");
+        int q = 0;
+        DecimalFormat df = new DecimalFormat("#.#####");
         for (int i:frequency) {
-            System.out.println((char)(o++) + " | " + i + " | " + ((double)i / (double)file.length()));
+            if(i != 0) System.out.println((++q) +" | "+ (char)(o++) + " | " + i + " | " + df.format(((double)i / file.length())));
         }
         double entropy = 0.0d;
         double probability;
         //Claude Shannon - The theory of information
-        for (int b:frequency) {
-            probability = (double)b/file.length();
-            if (b != 0) entropy -= (probability)* (Math.log(probability)/Math.log(2));
+        for (int f:frequency) {
+            probability = (double)f / file.length();
+            if (f != 0) entropy -= (probability) * log2(probability);
         }
-		    // calculate the next value to sum to previous entropy calculation
-		System.out.println(entropy);
+            // calculate the next value to sum to previous entropy calculation
+        
+        
+        PriorityQueue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(256);
+        for (int i = 0; i < 256; i++) {
+            if(frequency[i] != 0) pq.offer(new HuffmanNode((char)i,frequency[i]));
+        }
+        System.out.println("\nPriority Queue");
+        System.out.println("#|Char|Count\n");
+        int y = 0;
+        while (!pq.isEmpty()) System.out.println((++y)+ " | " + pq.poll());
+        //https://courses.cs.washington.edu/courses/csep521/99sp/lectures/lecture11/sld020.htm
+        System.out.println("\nEntropy of War and Peace " + df.format(entropy) + " bits/symbol");
+    }   
+    public static double log2(double n) {
+        return Math.log(n) / Math.log(2);
     }
-    /**
-     * TODO: parse txt file
-     */
     /**
      * TODO: output binary file
      */
@@ -115,7 +135,7 @@ public class Main {
      * TODO: output txt file
      */
     /**
-     * TODO: write test for coding tree
+     * TODO: write test for CodingTree
      */
     /**
      * TODO: write test for MyPriorityQueue
@@ -123,5 +143,4 @@ public class Main {
     /**
      * TODO: write unit-test for full file
      */
-
 }

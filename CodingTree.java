@@ -9,46 +9,6 @@ import java.util.PriorityQueue;
 
 /**
  * @author Jake McKenzie
- * 
- * This was the third assignment for TCSS 341-Data Structures.
- * I worked alone this assignment. In the assignment we 
- * developed huffman trees for compressing famous works of literature.
- * 
- * The books I used for testing and my thought process for choosing them:
- * 
- * 1. War and Peace - This was the required text for compression. It is
- * a long text and showcases the compression technique well. I consider compression
- * of this text to be the baseline to meet. If I can hit this then I will test on
- * progressively harder texts to compress and decompress.
- * 
- * 2. The Story of Gosta Berling - This was written by the first women nobel
- * laureate. It is a swedish novel translated into english and should allow
- * for more range of UTF-8 characters to test from. This is more modern swedish
- * that has been translated to english so it should be harder to compress and decompress.
- * 
- * 3. Epic of Gilgamesh - This is an epic from ancient mesopotamia that is a 
- * story of the unbreakable friendship of Gilgamesh and Enkidu. This 
- * text includes tablets with weird spacing mostly translated into ond english. 
- * It offers different challenges in testing to The Story of Gosta Berling. 
- * It does not have as large a range of UTF-8 characters but it does offer 
- * spacing constraints. This text is shorter than War and Peace and allows 
- * to be ran more often in testing.
- * 
- * 4. Os Maias - A portuguese satirical comedy. This book is in the original
- * portuguese, as such it offers a wide range of possible UTF-8 characters 
- * to be compressed. This should be, theoretically, one of the hardger texts 
- * to compress due to it being in portuguese. This text is nearly as long as War 
- * and Peace but due to it being written in a romantic language is quite varied
- * despite that length.
- * https://english.stackexchange.com/questions/2998/do-most-languages-need-more-space-than-english/3022#3022
- * 
- * 5. The Valsung Saga - an icelandic saga that inspired Tolkein and Andrew 
- * Lang. This book was translated fairly recently into english and was 
- * included due to the songs included. I'm using this mostly to test for spacing
- * and add variety to the testing as it uses a wide array of UTF-8 and 
- * includes a lot of spacing.
- * 
- * All of these books happen to be on my current to read pile.
  */
 public class CodingTree {
     /**
@@ -59,13 +19,15 @@ public class CodingTree {
      * TODO: fill in the rest of the Coding Tree constructor
      */
 
-    public CodingTree(String message) {
+    public CodingTree(byte[] message) {
         node = null;
         codes = new HashMap<Character,String>();
-        Map<Character,Integer> count = tallyChar(message);
-        MyPriorityQueue<Node> queue = new MyPriorityQueue<Node>();
-        for (char c:count.keySet()) queue.offer(new Node(c,count.get(c)));
-        //bits = new ArrayList<Byte>();
+        int[] frequency = countChar(message);
+        //Map<Character,Integer> count = tallyChar(message);
+        MyPriorityQueue<HuffmanNode> queue = new MyPriorityQueue<HuffmanNode>();
+        //int i = 0;
+        for (int i = 0; i < 256; i++) if(frequency[i] != 0) queue.offer(new HuffmanNode((char)i,frequency[i]));
+        bits = new ArrayList<Byte>();
         
     }
     /**
@@ -110,16 +72,29 @@ public class CodingTree {
     /**
      * This method will count the characters in my string
      * @param message the message encoded by the huffman tree
+     * 
+     * This was for an earlier implementation of the program.
      */
     public Map<Character,Integer> tallyChar(String message) {
         HashMap<Character,Integer> count = new HashMap<>();
         message.chars().forEachOrdered(c -> {
-            if (count.containsKey((char)c)) 
+            if (count.containsKey((char)c)) {
                 count.put((char)c,count.get((char)c)+1);
-            else 
+            }   
+            else {
                 count.put((char)c,1);
+            }   
         });
         return count;
+    }
+
+    /**
+     * @param message 
+     */
+    public int[] countChar(byte[] message) {
+        final int[] frequency = new int[256];
+        for (byte b : message) frequency[b & 0xFF]++;
+        return frequency;
     }
     /**
          * This returns the maximum codelength of the current huffman tree.
@@ -162,68 +137,4 @@ public class CodingTree {
             for (int i = 0; i < keys.length; i++) sum+=(double)keys[i].toString().length();
             return (sum / keys.length);
         }
-
-    /**
-     * Huffman tree node.
-     */
-    public class Node implements Comparable<Node> {
-        /**
-        * @param key the char associated with the node.
-        */
-        public char key;
-        /**
-        * @param count the frequency of the character
-        */
-        public int count;
-        /**
-        * @param L the left node of the huffman tree.
-        */
-        public Node L;
-        /**
-        * @param R the right node of the huffman tree.
-        */
-        public Node R;
-        
-        
-        /**
-        * @param nodeChar key being sent into a node.
-        * @param nodeCount count being sent into a node.
-        */
-        public Node(char nodeChar, int nodeCount) {
-            key = nodeChar;
-            count = nodeCount;
-            L = null;
-            R = null;
-        }
-        /**
-        * @param left left node
-        * @param right right node
-        */
-        public Node(Node left, Node right) {
-            L = left;
-            R = right;
-            count = left.count + right.count;
-        }
-        /**
-        * Returns true if the receiver is a leaf.
-        */
-        public boolean isLeaf() {
-            assert ((L == null) && (R == null)||((L != null) && (R != null)));//Should never trigger. For testing.
-            return ((L == null) && (R == null));
-        }
-        /**
-        * Returns a string representation of the node.
-        */
-        public String toString() {
-            return (key + " | " + count);
-        }
-
-        /**
-        * Compares this node with the specified node for order.
-        */
-        @Override
-        public int compareTo(Node that){
-            return this.count - that.count;
-        }
-    }
 }
