@@ -87,40 +87,42 @@ public class Main {
         //http://www.adam-bien.com/roller/abien/entry/java_8_reading_a_file
         //getBytes("UTF-8")
         File file = new File(WarAndPeace);
-        //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
-        final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
+        String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
+        //final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
         //System.out.println(message);
-        final int[] frequency = new int[256];
+        //final int[] frequency = new int[256];
         //bytes
-        for (byte b : message) frequency[b & 0xFF]++;
+        //for (byte b : message) frequency[b & 0xFF]++;
         int o = 0;
-        System.out.println("\nChars from War and Peace");
-        System.out.println("#|Char|Count|Entropy\n");
-        int q = 0;
-        DecimalFormat df = new DecimalFormat("#.#####");
-        for (int i:frequency) {
-            if(i != 0) System.out.println((++q) +" | "+ (char)(o++) + " | " + i + " | " + df.format(((double)i / file.length())));
-        }
-        double entropy = 0.0d;
-        double probability;
+        //System.out.println("\nChars from War and Peace");
+        //System.out.println("#|Char|Count|Entropy\n");
+        //int q = 0;
+        //DecimalFormat df = new DecimalFormat("#.#####");
+        //for (int i:frequency) {
+        //    if(i != 0) System.out.println((++q) +" | "+ (char)(o++) + " | " + i + " | " + df.format(((double)i / file.length())));
+        //}
+        //double entropy = 0.0d;
+        //double probability;
         //Claude Shannon - The theory of information
-        for (int f:frequency) {
-            probability = (double)f / file.length();
-            if (f != 0) entropy -= (probability) * log2(probability);
-        }
+        //for (int f:frequency) {
+        //    probability = (double)f / file.length();
+        //    if (f != 0) entropy -= (probability) * log2(probability);
+        //}
             // calculate the next value to sum to previous entropy calculation
         
         
-        PriorityQueue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(256);
-        for (int i = 0; i < 256; i++) {
-            if(frequency[i] != 0) pq.offer(new HuffmanNode((char)i,frequency[i]));
-        }
-        System.out.println("\nPriority Queue");
-        System.out.println("#|Char|Count\n");
-        int y = 0;
-        while (!pq.isEmpty()) System.out.println((++y)+ " | " + pq.poll());
+        //PriorityQueue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(256);
+        //for (int i = 0; i < 256; i++) {
+        //    if(frequency[i] != 0) pq.offer(new HuffmanNode((char)i,frequency[i]));
+        //}
+        //System.out.println("\nPriority Queue");
+        //System.out.println("#|Char|Count\n");
+        //int y = 0;
+        //while (!pq.isEmpty()) System.out.println((++y)+ " | " + pq.poll());
         //https://courses.cs.washington.edu/courses/csep521/99sp/lectures/lecture11/sld020.htm
-        System.out.println("\nEntropy of War and Peace " + df.format(entropy) + " bits/symbol");
+        //System.out.println("\nEntropy of War and Peace " + df.format(entropy) + " bits/symbol");
+
+        CodingTree c = new CodingTree(message);
     }   
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);

@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.PriorityQueue;
-
+import java.nio.charset.Charset;
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature
 //javac CodingTree.java Main.java MyPriorityQueue.java -Xlint:unchecked
 
@@ -19,15 +19,17 @@ public class CodingTree {
      * TODO: fill in the rest of the Coding Tree constructor
      */
 
-    public CodingTree(byte[] message) {
+    public CodingTree(String message) {
         node = null;
         codes = new HashMap<Character,String>();
         int[] frequency = countChar(message);
         //Map<Character,Integer> count = tallyChar(message);
-        MyPriorityQueue<HuffmanNode> queue = new MyPriorityQueue<HuffmanNode>();
+        PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>(frequency.length);
         //int i = 0;
         for (int i = 0; i < 256; i++) if(frequency[i] != 0) queue.offer(new HuffmanNode((char)i,frequency[i]));
-        bits = new ArrayList<Byte>();
+        int y = 0;
+        while (!queue.isEmpty()) System.out.println((++y)+ " | " + queue.poll());
+        //bits = new ArrayList<Byte>();
         
     }
     /**
@@ -91,9 +93,11 @@ public class CodingTree {
     /**
      * @param message 
      */
-    public int[] countChar(byte[] message) {
+    public int[] countChar(String message) {
+        byte[] bytes = message.getBytes(Charset.forName("US-ASCII"));
+        //byte[] bytes = message.getBytes(Charset.forName("UTF-8"));
         final int[] frequency = new int[256];
-        for (byte b : message) frequency[b & 0xFF]++;
+        for (byte b : bytes) frequency[b & 0xFF]++;
         return frequency;
     }
     /**
