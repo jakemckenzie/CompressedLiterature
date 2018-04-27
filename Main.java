@@ -86,14 +86,14 @@ public class Main {
         //https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
         //http://www.adam-bien.com/roller/abien/entry/java_8_reading_a_file
         //getBytes("UTF-8")
-        File file = new File(WarAndPeace);
+        //File file = new File(WarAndPeace);
         String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
         //final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
         //System.out.println(message);
         //final int[] frequency = new int[256];
         //bytes
         //for (byte b : message) frequency[b & 0xFF]++;
-        int o = 0;
+        //int o = 0;
         //System.out.println("\nChars from War and Peace");
         //System.out.println("#|Char|Count|Entropy\n");
         //int q = 0;

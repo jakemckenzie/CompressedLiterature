@@ -13,14 +13,17 @@ import java.util.Iterator;
         */
         public int count;
         /**
-        * @param L the left node of the huffman tree.
+        * @param L the left node of a huffman node.
         */
-        public Node L;
+        public HuffmanNode L;
         /**
-        * @param R the right node of the huffman tree.
+        * @param R the right node of a huffman node.
         */
-        public Node R;
-        
+        public HuffmanNode R;
+        /**
+         * @param P the parent of the
+         */
+        public HuffmanNode P;
         
         /**
         * @param nodeChar key being sent into a node.
@@ -36,10 +39,11 @@ import java.util.Iterator;
         * @param left left node
         * @param right right node
         */
-        public HuffmanNode(Node left, Node right) {
+        public HuffmanNode(int c, HuffmanNode left, HuffmanNode right, HuffmanNode parent) {
             L = left;
             R = right;
-            count = left.count + right.count;
+            count = c;
+            P = parent;
         }
         /**
         * Returns true if the receiver is a leaf.

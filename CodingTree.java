@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.nio.charset.Charset;
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature
-//javac CodingTree.java Main.java MyPriorityQueue.java -Xlint:unchecked
+//javac *.java -Xlint:unchecked
 
 /**
  * @author Jake McKenzie
@@ -67,7 +67,7 @@ public class CodingTree {
      * @param priQueue A priority queue of
      * TODO: fill in the rest of buildHuffmanTree function
      */
-    public void buildHuffmanTree(MyPriorityQueue<Node> queue) {
+    public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue) {
 
     }
 
@@ -91,10 +91,12 @@ public class CodingTree {
     }
 
     /**
-     * @param message 
+     * This method will count the characters in my string
+     * @param message the message encoded by the huffman tree
      */
     public int[] countChar(String message) {
         byte[] bytes = message.getBytes(Charset.forName("US-ASCII"));
+        //byte[] bytes = message.getBytes();
         //byte[] bytes = message.getBytes(Charset.forName("UTF-8"));
         final int[] frequency = new int[256];
         for (byte b : bytes) frequency[b & 0xFF]++;
