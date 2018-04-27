@@ -24,7 +24,12 @@ import java.util.Iterator;
          * @param P the parent of the
          */
         public HuffmanNode P;
-        
+        /**
+         * 
+         */
+        public HuffmanNode() {
+            P = null;
+        }
         /**
         * @param nodeChar key being sent into a node.
         * @param nodeCount count being sent into a node.
@@ -36,10 +41,14 @@ import java.util.Iterator;
             R = null;
         }
         /**
-        * @param left left node
-        * @param right right node
-        */
-        public HuffmanNode(int c, HuffmanNode left, HuffmanNode right, HuffmanNode parent) {
+         * @param k the key
+         * @param c The frequency of the character
+         * @param left left node
+         * @param right right node
+         * @param parent the parent of the node
+         */
+        public HuffmanNode(char k, int c, HuffmanNode left, HuffmanNode right, HuffmanNode parent) {
+            key = k;
             L = left;
             R = right;
             count = c;

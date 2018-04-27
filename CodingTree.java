@@ -20,34 +20,42 @@ public class CodingTree {
      */
 
     public CodingTree(String message) {
-        node = null;
-        codes = new HashMap<Character,String>();
+        //node = null;
+        //codes = new HashMap<Character,String>();
         int[] frequency = countChar(message);
         //Map<Character,Integer> count = tallyChar(message);
-        PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>(frequency.length);
         //int i = 0;
         for (int i = 0; i < 256; i++) if(frequency[i] != 0) queue.offer(new HuffmanNode((char)i,frequency[i]));
-        int y = 0;
-        while (!queue.isEmpty()) System.out.println((++y)+ " | " + queue.poll());
+        buildHuffmanTree(queue,frequency);
+        buildBinary(root,"");
+        //int y = 0;
+        //while (!queue.isEmpty()) System.out.println((++y)+ " | " + queue.poll());
         //bits = new ArrayList<Byte>();
         
     }
     /**
-     * @param node the Huffman Tree node.
+     * @param root the root to the Huffman Tree.
      */
-    public Node node;
+    public HuffmanNode root = new HuffmanNode();
     /**
      * @param codes A map of characters in the message with their binary codes.
      */
 
-    public HashMap<Character,String> codes;
+    public Map<Character,String> codes;
 
     /**
      * @param bits A message encoded using Huffman codes.
      */
 
     public ArrayList<Byte> bits;
-
+    /**
+     * @param size the size of the huffman tree
+     */
+    public int size = 0;
+    /**
+     * @param queue the priority queue for the huffman tree
+     */
+    public PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>();
     /**
      * ******************************EXTRA CREDIT**************************** 
      * This method will take the output of Huffman’s encoding and produce the original text.
@@ -67,8 +75,26 @@ public class CodingTree {
      * @param priQueue A priority queue of
      * TODO: fill in the rest of buildHuffmanTree function
      */
-    public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue) {
+    public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue,int[] frequency) {
+        while (queue.size() > 1) {
+            HuffmanNode lNode = queue.poll();
+            HuffmanNode rNode = queue.poll();
+            HuffmanNode parent = null;
+            for (int i = 0; i < 256; i++) if (frequency[i] != 0) parent = new HuffmanNode((char)(i++), frequency[i], lNode, rNode, null);    
+            lNode.P = parent;
+            rNode.P = parent;
 
+            queue.offer(parent);
+            this.size++;
+
+        }
+        this.root = queue.peek();
+    }
+
+    public void buildBinary(HuffmanNode root, String temp) {
+        if (root.L != null) buildBinary(root.L,temp + '0');
+        if (root.R != null) buildBinary(root.R,temp + '1');
+        if (root.isLeaf()) codes.put(root.key,temp);
     }
 
     /**
@@ -79,7 +105,7 @@ public class CodingTree {
      */
     public Map<Character,Integer> tallyChar(String message) {
         HashMap<Character,Integer> count = new HashMap<>();
-        message.chars().forEachOrdered(c -> {
+        message.chars().forEach(c -> {
             if (count.containsKey((char)c)) {
                 count.put((char)c,count.get((char)c)+1);
             }   
