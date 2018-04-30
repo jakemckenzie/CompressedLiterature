@@ -25,15 +25,16 @@ import java.util.Iterator;
          */
         public HuffmanNode P;
         /**
-         * 
+         * The most basic constructor.
          */
         public HuffmanNode() {
             P = null;
         }
         /**
-        * @param nodeChar key being sent into a node.
-        * @param nodeCount count being sent into a node.
-        */
+         * One of the two critically important constructors used in creation of the priority queue.
+         * @param nodeChar key being sent into a node.
+         * @param nodeCount count being sent into a node.
+         */
         public HuffmanNode(char nodeChar, int nodeCount) {
             key = nodeChar;
             count = nodeCount;
@@ -41,6 +42,7 @@ import java.util.Iterator;
             R = null;
         }
         /**
+         * A constructor for an earlier version of the assignment. I ended up not needing it.
          * @param k the key
          * @param c The frequency of the character
          * @param left left node
@@ -55,6 +57,7 @@ import java.util.Iterator;
             P = parent;
         }
         /**
+         * One of the two critically important constructors used in creation of the huffman tree.
          * @param left left node
          * @param right right node
          */

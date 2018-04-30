@@ -11,7 +11,6 @@ import java.util.BitSet;
 import java.io.PrintStream;
 /**
  * @author Jake McKenzie
- * TODO: Complete main
  */
 
 public class Main {
@@ -159,15 +158,7 @@ public class Main {
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
     }
-    /**
-     * TODO: output binary file
-     */
-    /**
-     * TODO: decode binary file
-     */
-    /**
-     * TODO: output txt file
-     */
+    
     /**
      * TODO: write test for CodingTree
      */

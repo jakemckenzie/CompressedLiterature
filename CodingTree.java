@@ -17,11 +17,9 @@ public class CodingTree {
      * The constructor is responsible for calling all private methods 
      * that carry out the Huffman coding algorithm.
      * @param message the message encoded by the huffman tree
-     * TODO: fill in the rest of the Coding Tree constructor
      */
 
     public CodingTree(String message) {
-        root = null;
         codes = new HashMap<Character,String>();
         int[] frequency = countChar(message);
         //Map<Character,Integer> count = tallyChar(message);
@@ -57,62 +55,32 @@ public class CodingTree {
      * @param size the size of the huffman tree
      */
     public int size = 0;
+    
     /**
-     * @param queue the priority queue for the huffman tree
+     * @param bits the output bits for file
      */
 
     public String bits;
-
-    public String decoded;
-    public PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>();
+    
     /**
+     * @param decoded the decoded string
+     */
+    
+     public String decoded;
+
+    /**
+     * @param queue the priority queue for the huffman tree
+     */
+    
+     public PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>();
+    
+     /**
      * ******************************EXTRA CREDIT**************************** 
      * This method will take the output of Huffman’s encoding and produce the original text.
      * @param bits A message encoded using Huffman codes.
      * @param codes A map of characters in the message with their binary codes.
-     * TODO: Fill in the rest of the decode function.
+     * TODO: Fix the decode function.
      */
-
-
-    /**
-     * Builds a Huffman tree given some weights and an alphabet.
-     * @param priQueue A priority queue of
-     * TODO: fill in the rest of buildHuffmanTree function
-     */
-    public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue) {
-        while (queue.size() > 1) {
-            // HuffmanNode lNode = queue.poll();
-            // HuffmanNode rNode = queue.poll();
-            // HuffmanNode parent = null;
-            // for (int i = 0; i < 256; i++) if (frequency[i] != 0) parent = new HuffmanNode((char)(i++), frequency[i], lNode, rNode, null);    
-            // lNode.P = parent;
-            // rNode.P = parent;
-
-            // queue.offer(parent);
-            // this.size++;
-
-            queue.offer(new HuffmanNode(queue.poll(),queue.poll()));
-        }
-        root = queue.poll();
-    }
-
-    public void buildBinary(HuffmanNode node, String temp) {
-        if (node.L != null) buildBinary(node.L,temp + '0');
-        if (node.R != null) buildBinary(node.R,temp + '1');
-        if (node.isLeaf()) codes.put(node.key,temp);
-    }
-
-    private void convertToBinary(String book) {
-		StringBuilder sb = new StringBuilder();
-		
-		for (int i = 0; i < book.length(); i++) {
-//			char c = theBook.charAt(i);
-//			sb.append(myCodes.get(c));
-			sb.append(codes.get(book.charAt(i)));
-		}
-		bits = sb.toString();
-    }
-    
     private String decode(String theBit, Map<Character,String> theCode) {
 		StringBuilder sb = new StringBuilder();
 		StringBuilder temp = new StringBuilder();
@@ -131,6 +99,30 @@ public class CodingTree {
 		return sb.toString();
 	}
 
+    /**
+     * Builds a Huffman tree given some weights and an alphabet.
+     * @param priQueue A priority queue of
+     * TODO: fill in the rest of buildHuffmanTree function
+     */
+    
+     public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue) {
+        while (queue.size() > 1) queue.offer(new HuffmanNode(queue.poll(),queue.poll()));
+        root = queue.poll();
+    }
+
+    public void buildBinary(HuffmanNode node, String temp) {
+        if (node.L != null) buildBinary(node.L,temp + '0');
+        if (node.R != null) buildBinary(node.R,temp + '1');
+        if (node.isLeaf()) codes.put(node.key,temp);
+    }
+
+    private void convertToBinary(String book) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < book.length(); i++) {
+			sb.append(codes.get(book.charAt(i)));
+		}
+		bits = sb.toString();
+    }
     /**
      * This method will count the characters in my string
      * @param message the message encoded by the huffman tree
