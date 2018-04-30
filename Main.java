@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -6,7 +7,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.text.DecimalFormat;
-
+import java.util.BitSet;
+import java.io.PrintStream;
 /**
  * @author Jake McKenzie
  * TODO: Complete main
@@ -82,12 +84,18 @@ public class Main {
      */
     private static final String codes = "codes.txt";
 
+    /**
+     * @param compressed a compressed output file for the codes
+     */
+    private static final String compressed = "compressed.txt";
+
     public static void main(String[] args) throws IOException{
+        long startTime = System.currentTimeMillis();
         //https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
         //http://www.adam-bien.com/roller/abien/entry/java_8_reading_a_file
         //getBytes("UTF-8")
         //File file = new File(WarAndPeace);
-        String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
+        String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)),"UTF-8");
         //final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
         //System.out.println(message);
         //final int[] frequency = new int[256];
@@ -123,6 +131,30 @@ public class Main {
         //System.out.println("\nEntropy of War and Peace " + df.format(entropy) + " bits/symbol");
 
         CodingTree c = new CodingTree(message);
+        PrintStream output1 = new PrintStream(new File(codes));
+        FileOutputStream output2 = new FileOutputStream(new File(compressed));
+        //output1.write(c.codes.toString().getBytes("UTF-8"));
+        output1.write(c.codes.toString().getBytes());
+        output1.close();
+        BitSet bs = new BitSet(c.bits.length());
+
+        for (int o = 0; o < c.bits.length(); o++) {
+            if (c.bits.charAt(o) == '1') bs.flip(o); 
+        }
+
+        byte[] byteArray = bs.toByteArray();
+        output2.write(byteArray);
+        output2.close();
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        double compressed = Files.size(Paths.get("compressed.txt"));
+        double targerCompressed = Files.size(Paths.get("targerCompressed.txt"));
+        double difference = (targerCompressed - compressed);
+        System.out.println("Compressed file size: " +  compressed / 1000 + " kilobytes");
+        System.out.println("Target compressed file size: " +  targerCompressed / 1000  + " kilobytes");
+        System.out.println("Difference in compressed file sizes of my file vs the target: " + difference / 1000  + " kilobytes");
+        System.out.println("Percent Difference between target and my compressed: " + 100 * Math.abs(difference)/targerCompressed  + "%");
+        System.out.println("Running Time: " + duration + " milliseconds");
     }   
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);

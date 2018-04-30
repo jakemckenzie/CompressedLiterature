@@ -55,6 +55,15 @@ import java.util.Iterator;
             P = parent;
         }
         /**
+         * @param left left node
+         * @param right right node
+         */
+        public HuffmanNode(HuffmanNode left, HuffmanNode right) {
+            L = left;
+			R = right;
+			count = left.count + right.count;
+        }
+        /**
         * Returns true if the receiver is a leaf.
         */
         public boolean isLeaf() {
@@ -73,6 +82,6 @@ import java.util.Iterator;
         */
         @Override
         public int compareTo(HuffmanNode that){
-            return this.count - that.count;
+            return count - that.count;
         }
     }

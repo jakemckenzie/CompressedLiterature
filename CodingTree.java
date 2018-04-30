@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature
 //javac *.java -Xlint:unchecked
 
@@ -20,17 +21,21 @@ public class CodingTree {
      */
 
     public CodingTree(String message) {
-        //node = null;
-        //codes = new HashMap<Character,String>();
+        root = null;
+        codes = new HashMap<Character,String>();
         int[] frequency = countChar(message);
         //Map<Character,Integer> count = tallyChar(message);
         //int i = 0;
         for (int i = 0; i < 256; i++) if(frequency[i] != 0) queue.offer(new HuffmanNode((char)i,frequency[i]));
-        buildHuffmanTree(queue,frequency);
+        buildHuffmanTree(queue);
+        //root = queue.peek();
         buildBinary(root,"");
+        //System.out.println(Arrays.asList(codes));
         //int y = 0;
         //while (!queue.isEmpty()) System.out.println((++y)+ " | " + queue.poll());
         //bits = new ArrayList<Byte>();
+        convertToBinary(message);
+        decoded = decode(bits,codes);
         
     }
     /**
@@ -47,7 +52,7 @@ public class CodingTree {
      * @param bits A message encoded using Huffman codes.
      */
 
-    public ArrayList<Byte> bits;
+    //public ArrayList<Byte> bits;
     /**
      * @param size the size of the huffman tree
      */
@@ -55,6 +60,10 @@ public class CodingTree {
     /**
      * @param queue the priority queue for the huffman tree
      */
+
+    public String bits;
+
+    public String decoded;
     public PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>();
     /**
      * ******************************EXTRA CREDIT**************************** 
@@ -64,38 +73,63 @@ public class CodingTree {
      * TODO: Fill in the rest of the decode function.
      */
 
-    public String decode(String bits, Map<Character,String> codes) {
-        String temp = "";
-
-        return temp;
-    }
 
     /**
      * Builds a Huffman tree given some weights and an alphabet.
      * @param priQueue A priority queue of
      * TODO: fill in the rest of buildHuffmanTree function
      */
-    public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue,int[] frequency) {
+    public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue) {
         while (queue.size() > 1) {
-            HuffmanNode lNode = queue.poll();
-            HuffmanNode rNode = queue.poll();
-            HuffmanNode parent = null;
-            for (int i = 0; i < 256; i++) if (frequency[i] != 0) parent = new HuffmanNode((char)(i++), frequency[i], lNode, rNode, null);    
-            lNode.P = parent;
-            rNode.P = parent;
+            // HuffmanNode lNode = queue.poll();
+            // HuffmanNode rNode = queue.poll();
+            // HuffmanNode parent = null;
+            // for (int i = 0; i < 256; i++) if (frequency[i] != 0) parent = new HuffmanNode((char)(i++), frequency[i], lNode, rNode, null);    
+            // lNode.P = parent;
+            // rNode.P = parent;
 
-            queue.offer(parent);
-            this.size++;
+            // queue.offer(parent);
+            // this.size++;
 
+            queue.offer(new HuffmanNode(queue.poll(),queue.poll()));
         }
-        this.root = queue.peek();
+        root = queue.poll();
     }
 
-    public void buildBinary(HuffmanNode root, String temp) {
-        if (root.L != null) buildBinary(root.L,temp + '0');
-        if (root.R != null) buildBinary(root.R,temp + '1');
-        if (root.isLeaf()) codes.put(root.key,temp);
+    public void buildBinary(HuffmanNode node, String temp) {
+        if (node.L != null) buildBinary(node.L,temp + '0');
+        if (node.R != null) buildBinary(node.R,temp + '1');
+        if (node.isLeaf()) codes.put(node.key,temp);
     }
+
+    private void convertToBinary(String book) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < book.length(); i++) {
+//			char c = theBook.charAt(i);
+//			sb.append(myCodes.get(c));
+			sb.append(codes.get(book.charAt(i)));
+		}
+		bits = sb.toString();
+    }
+    
+    private String decode(String theBit, Map<Character,String> theCode) {
+		StringBuilder sb = new StringBuilder();
+		StringBuilder temp = new StringBuilder();
+		Map<String, Character> decode = new HashMap<String, Character>();
+		
+		for (char c : theCode.keySet()) decode.put(theCode.get(c), c);
+		
+		for (int i = 0; i < theBit.length() ; i++) {
+			temp.append(theBit.charAt(i));
+			
+			if (decode.containsKey(temp)) {
+				sb.append(decode.get(temp));
+				temp = new StringBuilder();
+			}
+		}
+		return sb.toString();
+	}
 
     /**
      * This method will count the characters in my string
@@ -121,8 +155,8 @@ public class CodingTree {
      * @param message the message encoded by the huffman tree
      */
     public int[] countChar(String message) {
-        byte[] bytes = message.getBytes(Charset.forName("US-ASCII"));
-        //byte[] bytes = message.getBytes();
+        //byte[] bytes = message.getBytes(Charset.forName("US-ASCII"));
+        byte[] bytes = message.getBytes();
         //byte[] bytes = message.getBytes(Charset.forName("UTF-8"));
         final int[] frequency = new int[256];
         for (byte b : bytes) frequency[b & 0xFF]++;
@@ -169,4 +203,6 @@ public class CodingTree {
             for (int i = 0; i < keys.length; i++) sum+=(double)keys[i].toString().length();
             return (sum / keys.length);
         }
+
+       
 }
