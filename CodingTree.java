@@ -77,29 +77,23 @@ public class CodingTree {
      * @param codes A map of characters in the message with their binary codes.
      * TODO: Fix the decode function.
      */
-    public String decode(String theBits, Map<Character, String> theCodes) {
-		StringBuilder decodedMessage = new StringBuilder();
-		Map<String, Character> codesReversed = new HashMap<String, Character>();
+    private String decode(String bits, Map<Character,String> codes) {
+		StringBuilder sb = new StringBuilder();
+		StringBuilder temp = new StringBuilder();
+		Map<String, Character> decode = new HashMap<String, Character>();
 		
-		//reverse map so we can parse the bits with codes as our keys
-		for (Character c : theCodes.keySet()) {
-			String code = theCodes.get(c);
-			codesReversed.put(code, c);
-		}
+		for (char c : codes.keySet()) decode.put(codes.get(c), c);
 		
-		StringBuilder subEncoded = new StringBuilder();
-		Character charTemp;
-		
-		for (int i = 0; i < theBits.length(); i++) {
-			subEncoded.append(theBits.charAt(i));
-			charTemp = codesReversed.get(subEncoded.toString());
-			if (charTemp != null) {
-				decodedMessage.append(charTemp);
-				subEncoded.setLength(0);	//clears the bits
+		for (int i = 0; i < bits.length() ; i++) {
+			temp.append(bits.charAt(i));
+			
+			if (decode.containsKey(temp)) {
+				sb.append(decode.get(temp));
+				temp = new StringBuilder();
 			}
-		}
-		System.out.println(decodedMessage.toString());
-		return decodedMessage.toString();
+        }
+        System.out.println(sb.toString());
+		return sb.toString();
 	}
 
     /**

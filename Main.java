@@ -133,7 +133,7 @@ public class Main {
 
         CodingTree c = new CodingTree(message);
         PrintStream output1 = new PrintStream(new File(codes));
-        FileOutputStream output2 = new FileOutputStream(new File(compressed));
+        FileOutputStream output2 = new FileOutputStream(new File(compressed),false);
         //output1.write(c.codes.toString().getBytes("UTF-8"));
         output1.write(c.codes.toString().getBytes());
         output1.close();
@@ -149,9 +149,9 @@ public class Main {
         double compressed = Files.size(Paths.get("compressed.txt"));
         double targerCompressed = Files.size(Paths.get("targerCompressed.txt"));
         double difference = (targerCompressed - compressed);
-        System.out.println("Compressed file size: " +  compressed / 1024 + " kilobytes");
-        System.out.println("Target compressed file size: " +  targerCompressed / 1024  + " kilobytes");
-        System.out.println("Difference in compressed file sizes of my file vs the target: " + difference / 1024  + " kilobytes");
+        System.out.println("Compressed file size: " +  compressed + " bytes");
+        System.out.println("Target compressed file size: " +  targerCompressed  + " bytes");
+        System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
         System.out.println("Percent Difference between target and my compressed: " + 100 * Math.abs(difference)/targerCompressed  + "%");
         System.out.println("Running Time: " + duration + " milliseconds");
     }   
