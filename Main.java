@@ -95,6 +95,8 @@ public class Main {
         //getBytes("UTF-8")
         //File file = new File(WarAndPeace);
         String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)),"UTF-8");
+        //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
+        //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)), "US-ASCII");
         //final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
         //System.out.println(message);
         //final int[] frequency = new int[256];
@@ -137,9 +139,7 @@ public class Main {
         output1.close();
         BitSet bs = new BitSet(c.bits.length());
 
-        for (int o = 0; o < c.bits.length(); o++) {
-            if (c.bits.charAt(o) == '1') bs.flip(o); 
-        }
+        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o); 
 
         byte[] byteArray = bs.toByteArray();
         output2.write(byteArray);
@@ -149,9 +149,9 @@ public class Main {
         double compressed = Files.size(Paths.get("compressed.txt"));
         double targerCompressed = Files.size(Paths.get("targerCompressed.txt"));
         double difference = (targerCompressed - compressed);
-        System.out.println("Compressed file size: " +  compressed / 1000 + " kilobytes");
-        System.out.println("Target compressed file size: " +  targerCompressed / 1000  + " kilobytes");
-        System.out.println("Difference in compressed file sizes of my file vs the target: " + difference / 1000  + " kilobytes");
+        System.out.println("Compressed file size: " +  compressed / 1024 + " kilobytes");
+        System.out.println("Target compressed file size: " +  targerCompressed / 1024  + " kilobytes");
+        System.out.println("Difference in compressed file sizes of my file vs the target: " + difference / 1024  + " kilobytes");
         System.out.println("Percent Difference between target and my compressed: " + 100 * Math.abs(difference)/targerCompressed  + "%");
         System.out.println("Running Time: " + duration + " milliseconds");
     }   

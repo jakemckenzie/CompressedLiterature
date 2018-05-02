@@ -33,6 +33,7 @@ public class CodingTree {
         //while (!queue.isEmpty()) System.out.println((++y)+ " | " + queue.poll());
         //bits = new ArrayList<Byte>();
         convertToBinary(message);
+        //System.out.println(bits);
         decoded = decode(bits,codes);
         
     }
@@ -46,11 +47,6 @@ public class CodingTree {
 
     public Map<Character,String> codes;
 
-    /**
-     * @param bits A message encoded using Huffman codes.
-     */
-
-    //public ArrayList<Byte> bits;
     /**
      * @param size the size of the huffman tree
      */
@@ -81,28 +77,34 @@ public class CodingTree {
      * @param codes A map of characters in the message with their binary codes.
      * TODO: Fix the decode function.
      */
-    private String decode(String theBit, Map<Character,String> theCode) {
-		StringBuilder sb = new StringBuilder();
-		StringBuilder temp = new StringBuilder();
-		Map<String, Character> decode = new HashMap<String, Character>();
+    public String decode(String theBits, Map<Character, String> theCodes) {
+		StringBuilder decodedMessage = new StringBuilder();
+		Map<String, Character> codesReversed = new HashMap<String, Character>();
 		
-		for (char c : theCode.keySet()) decode.put(theCode.get(c), c);
+		//reverse map so we can parse the bits with codes as our keys
+		for (Character c : theCodes.keySet()) {
+			String code = theCodes.get(c);
+			codesReversed.put(code, c);
+		}
 		
-		for (int i = 0; i < theBit.length() ; i++) {
-			temp.append(theBit.charAt(i));
-			
-			if (decode.containsKey(temp)) {
-				sb.append(decode.get(temp));
-				temp = new StringBuilder();
+		StringBuilder subEncoded = new StringBuilder();
+		Character charTemp;
+		
+		for (int i = 0; i < theBits.length(); i++) {
+			subEncoded.append(theBits.charAt(i));
+			charTemp = codesReversed.get(subEncoded.toString());
+			if (charTemp != null) {
+				decodedMessage.append(charTemp);
+				subEncoded.setLength(0);	//clears the bits
 			}
 		}
-		return sb.toString();
+		System.out.println(decodedMessage.toString());
+		return decodedMessage.toString();
 	}
 
     /**
      * Builds a Huffman tree given some weights and an alphabet.
-     * @param priQueue A priority queue of
-     * TODO: fill in the rest of buildHuffmanTree function
+     * @param priQueue A priority queue of huffman nodes
      */
     
      public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue) {
@@ -118,9 +120,7 @@ public class CodingTree {
 
     private void convertToBinary(String book) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < book.length(); i++) {
-			sb.append(codes.get(book.charAt(i)));
-		}
+		for (int i = 0; i < book.length(); i++) sb.append(codes.get(book.charAt(i)));
 		bits = sb.toString();
     }
     /**
