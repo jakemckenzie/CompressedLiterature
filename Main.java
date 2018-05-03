@@ -94,8 +94,8 @@ public class Main {
         //http://www.adam-bien.com/roller/abien/entry/java_8_reading_a_file
         //getBytes("UTF-8")
         //File file = new File(WarAndPeace);
-        String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)),"UTF-8");
-        //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
+        //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)),"UTF-8");
+        String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
         //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)), "US-ASCII");
         //final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
         //System.out.println(message);
@@ -146,6 +146,7 @@ public class Main {
         output2.close();
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
+        Files.write(Paths.get("./decoded.txt"), c.decoded.getBytes());
         double compressed = Files.size(Paths.get("compressed.txt"));
         double targerCompressed = Files.size(Paths.get("targerCompressed.txt"));
         double difference = (targerCompressed - compressed);

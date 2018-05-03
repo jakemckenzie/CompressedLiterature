@@ -22,18 +22,10 @@ public class CodingTree {
     public CodingTree(String message) {
         codes = new HashMap<Character,String>();
         int[] frequency = countChar(message);
-        //Map<Character,Integer> count = tallyChar(message);
-        //int i = 0;
         for (int i = 0; i < 256; i++) if(frequency[i] != 0) queue.offer(new HuffmanNode((char)i,frequency[i]));
         buildHuffmanTree(queue);
-        //root = queue.peek();
         buildBinary(root,"");
-        //System.out.println(Arrays.asList(codes));
-        //int y = 0;
-        //while (!queue.isEmpty()) System.out.println((++y)+ " | " + queue.poll());
-        //bits = new ArrayList<Byte>();
         convertToBinary(message);
-        //System.out.println(bits);
         decoded = decode(bits,codes);
         
     }
@@ -75,25 +67,20 @@ public class CodingTree {
      * This method will take the output of Huffman’s encoding and produce the original text.
      * @param bits A message encoded using Huffman codes.
      * @param codes A map of characters in the message with their binary codes.
-     * TODO: Fix the decode function.
      */
+
     private String decode(String bits, Map<Character,String> codes) {
-		StringBuilder sb = new StringBuilder();
-		StringBuilder temp = new StringBuilder();
-		Map<String, Character> decode = new HashMap<String, Character>();
-		
-		for (char c : codes.keySet()) decode.put(codes.get(c), c);
-		
-		for (int i = 0; i < bits.length() ; i++) {
-			temp.append(bits.charAt(i));
-			
-			if (decode.containsKey(temp)) {
-				sb.append(decode.get(temp));
-				temp = new StringBuilder();
-			}
+        StringBuilder out = new StringBuilder();
+        root = null;
+        HuffmanNode node = root;
+        for (int i = 0; i < bits.length(); i++) {
+            node = (bits.charAt(i) == '1') ? node.R : node.L;
+            if (node.isLeaf()) {
+                out.append(node.key);
+                node = root;
+            }
         }
-        System.out.println(sb.toString());
-		return sb.toString();
+        return out.toString();
 	}
 
     /**
@@ -122,6 +109,11 @@ public class CodingTree {
      * @param message the message encoded by the huffman tree
      * 
      * This was for an earlier implementation of the program.
+     * 
+     * I left it in because I was learning functional programming
+     * way of doing all my methods. Interesting that c needs to
+     * be casted as it is being treated as an int (?) for optimization
+     * purposes.
      */
     public Map<Character,Integer> tallyChar(String message) {
         HashMap<Character,Integer> count = new HashMap<>();
@@ -137,7 +129,18 @@ public class CodingTree {
     }
 
     /**
-     * This method will count the characters in my string
+     * This method will count the characters in my string. 
+     * I was talking with ammon dodson a lot about bitwise
+     * operations and stumbled upon this method.
+     * 
+     * Since all bitwise operations implicityly cast all types
+     * to integers when you apply operations to them this allows
+     * me to count count all 2 byte length chars in the file without
+     * getting an index out of bounds error, since bytes are signed
+     * in java.
+     * 
+     * This allows me to store the value and frequency all in one array
+     * as the index of the array corresponds to the character value.
      * @param message the message encoded by the huffman tree
      */
     public int[] countChar(String message) {
@@ -189,6 +192,4 @@ public class CodingTree {
             for (int i = 0; i < keys.length; i++) sum+=(double)keys[i].toString().length();
             return (sum / keys.length);
         }
-
-       
 }

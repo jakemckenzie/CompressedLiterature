@@ -53,10 +53,10 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * Returns back the size of the current queue.
      * TODO: fill in the size() function
      */
-    //@Override
-    //public int size() {
-    //    return 0;
-    //}
+    
+    public int size() {
+       return queue.size();
+    }
     /**
      * Constructor that builds queue given a limit.
      * @param limit the maximum size of the queue
