@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Collection;
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature
 //javac *.java -Xlint:unchecked
 
@@ -24,6 +25,7 @@ public class CodingTree {
         int[] frequency = countChar(message);
         for (int i = 0; i < 256; i++) if(frequency[i] != 0) queue.offer(new HuffmanNode((char)i,frequency[i]));
         buildHuffmanTree(queue);
+        //StringBuilder temp = new StringBuilder(); 
         buildBinary(root,"");
         convertToBinary(message);
         decoded = decode(bits,codes);
@@ -71,18 +73,27 @@ public class CodingTree {
 
     private String decode(String bits, Map<Character,String> codes) {
         StringBuilder out = new StringBuilder();
-        root = null;
-        HuffmanNode node = root;
+        StringBuilder temp = new StringBuilder();
+        //String temp = "";
+        //HuffmanNode decNode = root;
+        Map<String,Character> decoder = new HashMap<String,Character>();
+        Collection<Character> keys = codes.keySet();
+        for (char k: keys) decoder.put(codes.get(k),k);
         for (int i = 0; i < bits.length(); i++) {
-            node = (bits.charAt(i) == '1') ? node.R : node.L;
-            if (node.isLeaf()) {
-                out.append(node.key);
-                node = root;
+            //temp += (bits.charAt(i) == '1') ? '1' : '0';            
+            if (bits.charAt(i) == '1') {
+                temp.append('1');
+            } else {
+                temp.append('0');
+            }
+            if (decoder.get(temp.toString()) != null) {
+                out.append(decoder.get(temp.toString()));
+                //temp = new StringBuilder();
+                temp.setLength(0);//faster than making a new object apparently?
             }
         }
         return out.toString();
-	}
-
+    }
     /**
      * Builds a Huffman tree given some weights and an alphabet.
      * @param priQueue A priority queue of huffman nodes
@@ -93,7 +104,7 @@ public class CodingTree {
         root = queue.poll();
     }
 
-    public void buildBinary(HuffmanNode node, String temp) {
+    public void buildBinary(HuffmanNode node,String temp) {
         if (node.L != null) buildBinary(node.L,temp + '0');
         if (node.R != null) buildBinary(node.R,temp + '1');
         if (node.isLeaf()) codes.put(node.key,temp);
