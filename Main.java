@@ -81,12 +81,12 @@ public class Main {
     /**
      * @param codes an output file for the codes
      */
-    private static final String codes = "codes.txt";
+    private static final String codes = "./codes.txt";
 
     /**
      * @param compressed a compressed output file for the codes
      */
-    private static final String compressed = "compressed.txt";
+    private static final String compressed = "./compressed.txt";
 
     public static void main(String[] args) throws IOException{
         long startTime = System.currentTimeMillis();
@@ -110,14 +110,8 @@ public class Main {
         //for (int i:frequency) {
         //    if(i != 0) System.out.println((++q) +" | "+ (char)(o++) + " | " + i + " | " + df.format(((double)i / file.length())));
         //}
-        //double entropy = 0.0d;
-        //double probability;
-        //Claude Shannon - The theory of information
-        //for (int f:frequency) {
-        //    probability = (double)f / file.length();
-        //    if (f != 0) entropy -= (probability) * log2(probability);
-        //}
-            // calculate the next value to sum to previous entropy calculation
+        
+        // calculate the next value to sum to previous entropy calculation
         
         
         //PriorityQueue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(256);
@@ -132,18 +126,10 @@ public class Main {
         //System.out.println("\nEntropy of War and Peace " + df.format(entropy) + " bits/symbol");
 
         CodingTree c = new CodingTree(message);
-        PrintStream output1 = new PrintStream(new File(codes));
-        FileOutputStream output2 = new FileOutputStream(new File(compressed),false);
-        //output1.write(c.codes.toString().getBytes("UTF-8"));
-        output1.write(c.codes.toString().getBytes());
-        output1.close();
+        Files.write(Paths.get(codes), c.codes.toString().getBytes());
         BitSet bs = new BitSet(c.bits.length());
-
-        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o); 
-
-        byte[] byteArray = bs.toByteArray();
-        output2.write(byteArray);
-        output2.close();
+        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
+        Files.write(Paths.get(compressed), bs.toByteArray());
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         Files.write(Paths.get("./decoded.txt"), c.decoded.getBytes());
@@ -155,18 +141,78 @@ public class Main {
         System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
         System.out.println("Percent Difference between target and my compressed: " + 100 * Math.abs(difference)/targerCompressed  + "%");
         System.out.println("Running Time: " + duration + " milliseconds");
+        //testCodingTree();
     }   
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
     }
-    
     /**
-     * TODO: write test for CodingTree
+     * This is a small test of the coding tree. I wrote a helper
+     * function inspired by the first chapter of Maxime Crochmore's
+     * Algorithm's on Strings. I expect the code length to be just as
+     * long for the fibonacci sequence with strings and that is what
+     * I obtain from testing. 
      */
+    public static void testCodingTree() {
+        CodingTree testCodingTree = new CodingTree(fibonacciStrings(15));
+        System.out.println(fibonacciStrings(15));
+        System.out.println(testCodingTree.codes.toString());
+        System.out.println(testCodingTree.bits.toString());
+        System.out.println(testCodingTree.decoded.toString());
+        System.out.println("This tests the length of the fibonacciStrings(2) through fibonacciStrings(35) are the same length: ");
+        for (int i = 2; i < 25; i++) {
+            CodingTree testLengthCodingTree = new CodingTree(fibonacciStrings(i));
+            // /System.out.println("fibonacciStrings(" + i + ") = " + fibonacciStrings(i) + ", length = " + fibonacciStrings(i).length());
+            System.out.println(fibonacciStrings(i).length() == testLengthCodingTree.bits.toString().length() && fibonacciStrings(i).length() == testLengthCodingTree.decoded.toString().length());
+        }
+        System.out.println("This should always be true, which it is.");
+        System.out.println("The entropy of fibonacciStrings(15) of a string is, the encoded bits and decoded bits are: ");
+        System.out.println(getEntropy(fibonacciStrings(15)));
+        System.out.println(getEntropy(testCodingTree.bits.toString()));
+        System.out.println(getEntropy(testCodingTree.decoded.toString()));
+        System.out.println("This should be the same number and it is.");
+    }
     /**
-     * TODO: write test for MyPriorityQueue
+     * pg 9 of Maxime Crochemore's Algorithms on Strings. 
+     * 
+     * fibonacciStrings(1)    1   b
+     * fibonacciStrings(2)    1   a
+     * fibonacciStrings(3)    2   ab
+     * fibonacciStrings(4)    3   aba
+     * fibonacciStrings(5)    5   abaab
+     * fibonacciStrings(6)    8   abaababa
+     * fibonacciStrings(7)    13  abaababaabaab
+     * fibonacciStrings(8)    21  abaababaabaababaababa
+     * fibonacciStrings(9)    34  abaababaabaababaababaabaababaabaab
+     * 
+     * The lengths of the strings are exactly the same length as the sequence of fibonacci numbers ie Fn = |fibonacciStrings(n)|
+     * yet it has many repeats. This makes it good, in my opinion, for testing purposes
      */
+    public static String fibonacciStrings(int N){
+        return (N == 0) ? "b" : (N == 1) ? "a" : fibonacciStrings(N - 1) + fibonacciStrings(N - 2);
+    }
+    /**
+     * This was used for testing purposes. When I read about the huffman compression
+     * entropy kept coming up so I decided to see what the entropy of the files were that
+     * I collected for testing. I encluded the entropy of each above in the comments of their file names.
+     * The only changed was that I divided by file length instead of string length. 
+     */
+    public static double getEntropy(String s){
+        double entropy = 0.0d;
+        double probability;
+        final int[] frequency = new int[256];
+        for (byte b : s.getBytes()) frequency[b & 0xFF]++;
+        //Claude Shannon - The theory of information
+        for (int f:frequency) {
+           probability = (double)f / s.length();
+           if (f != 0) entropy -= (probability) * log2(probability);
+        }
+        return entropy;
+    }
+    public static void fullUnitTest() {
+        
+    }
     /**
      * TODO: write unit-test for full file
      */
-}
+} 

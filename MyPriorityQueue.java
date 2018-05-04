@@ -157,7 +157,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * 
      * @return the comparison on the left and right child
      */
-    @SuppressWarnings("unchecked")
+    // /@SuppressWarnings("unchecked")
     public int compare(T L, T R) {
         if (comparator != null) {
             return comparator.compare(L, R);

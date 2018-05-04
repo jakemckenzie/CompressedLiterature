@@ -100,14 +100,19 @@ public class CodingTree {
      */
     
      public void buildHuffmanTree(MyPriorityQueue<HuffmanNode> queue) {
-        while (queue.size() > 1) queue.offer(new HuffmanNode(queue.poll(),queue.poll()));
+        for (int i = queue.size(); queue.size() > 1;i--) queue.offer(new HuffmanNode(queue.poll(),queue.poll()));
         root = queue.poll();
     }
     public void buildBinary(HuffmanNode node,String temp) {
     //public void buildBinary(HuffmanNode node,StringBuilder temp) {
-        if (node.R != null) buildBinary(node.R,temp + '1');
-        if (node.L != null) buildBinary(node.L,temp + '0');
-        if (node.isLeaf()) codes.put(node.key,temp);
+        if (!node.isLeaf()) {
+            buildBinary(node.R,temp + '1');
+            buildBinary(node.L,temp + '0');
+        } else {
+            codes.put(node.key,temp);
+        }
+        // if (node.R != null) buildBinary(node.R,temp + '1');
+        // if (node.L != null) buildBinary(node.L,temp + '0');
         // if (node.L != null) {
         //     temp.append('0');
         //     buildBinary(node.L,temp);
