@@ -79,6 +79,20 @@ public class Main {
     private static final String TheStoryOfTheVolsungs = "TheStoryOfTheVolsungs.txt";
 
     /**
+     * @param A_PAINLESS_GUIDE_TO_CRC_ERROR_DETECTION_ALGORITHMS A guide for cyclic
+     * redundancy check. When we send a packet we want to guarantee the receiver received
+     * the messeage without any errors so we need to detect errors. Then we deploy different
+     * algorithms to solve the problem. This is a very famous paper the author made publically
+     * available that is shared widely in embedded systems. This txt file was included because 
+     * it has many spaces and handcrafted formatting to illustrated examples.
+     * 
+     * Entropy = 4.756447913333198
+     * 
+     * All of these books happen to be on my current to read pile.
+     */
+
+    private static final String A_PAINLESS_GUIDE_TO_CRC_ERROR_DETECTION_ALGORITHMS = "A_PAINLESS_GUIDE_TO_CRC_ERROR_DETECTION_ALGORITHMS.txt";
+    /**
      * @param codes an output file for the codes
      */
     private static final String codes = "./codes.txt";
@@ -88,43 +102,18 @@ public class Main {
      */
     private static final String compressed = "./compressed.txt";
 
+    /**
+     * @param decompressed a compressed output file for the codes
+     */
+    private static final String decompressed = "./decompressed.txt";
+
     public static void main(String[] args) throws IOException{
         long startTime = System.currentTimeMillis();
         //https://docs.oracle.com/javase/8/docs/api/java/lang/String.html
         //http://www.adam-bien.com/roller/abien/entry/java_8_reading_a_file
-        //getBytes("UTF-8")
-        //File file = new File(WarAndPeace);
         //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)),"UTF-8");
         String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
         //String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)), "US-ASCII");
-        //final byte[] message = Files.readAllBytes(Paths.get(WarAndPeace));
-        //System.out.println(message);
-        //final int[] frequency = new int[256];
-        //bytes
-        //for (byte b : message) frequency[b & 0xFF]++;
-        //int o = 0;
-        //System.out.println("\nChars from War and Peace");
-        //System.out.println("#|Char|Count|Entropy\n");
-        //int q = 0;
-        //DecimalFormat df = new DecimalFormat("#.#####");
-        //for (int i:frequency) {
-        //    if(i != 0) System.out.println((++q) +" | "+ (char)(o++) + " | " + i + " | " + df.format(((double)i / file.length())));
-        //}
-        
-        // calculate the next value to sum to previous entropy calculation
-        
-        
-        //PriorityQueue<HuffmanNode> pq = new PriorityQueue<HuffmanNode>(256);
-        //for (int i = 0; i < 256; i++) {
-        //    if(frequency[i] != 0) pq.offer(new HuffmanNode((char)i,frequency[i]));
-        //}
-        //System.out.println("\nPriority Queue");
-        //System.out.println("#|Char|Count\n");
-        //int y = 0;
-        //while (!pq.isEmpty()) System.out.println((++y)+ " | " + pq.poll());
-        //https://courses.cs.washington.edu/courses/csep521/99sp/lectures/lecture11/sld020.htm
-        //System.out.println("\nEntropy of War and Peace " + df.format(entropy) + " bits/symbol");
-
         CodingTree c = new CodingTree(message);
         Files.write(Paths.get(codes), c.codes.toString().getBytes());
         BitSet bs = new BitSet(c.bits.length());
@@ -132,7 +121,7 @@ public class Main {
         Files.write(Paths.get(compressed), bs.toByteArray());
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
-        Files.write(Paths.get("./decoded.txt"), c.decoded.getBytes());
+        Files.write(Paths.get(decompressed), c.decoded.getBytes());
         double compressed = Files.size(Paths.get("compressed.txt"));
         double targerCompressed = Files.size(Paths.get("targerCompressed.txt"));
         double difference = (targerCompressed - compressed);
@@ -141,7 +130,21 @@ public class Main {
         System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
         System.out.println("Percent Difference between target and my compressed: " + 100 * Math.abs(difference)/targerCompressed  + "%");
         System.out.println("Running Time: " + duration + " milliseconds");
+        
+        /**
+         * This was part of the specified testing that was required for the assignment.
+         */
         //testCodingTree();
+        
+        /**
+         * Please leave these commented out when grading the baseline program.
+         * They overwrite many of the files included in the assignment.
+         */
+        //testTheStoryOfGostaBerling();
+        //testEpicOfGilgamesh();
+        //testOsMaias();
+        //testTheStoryOfTheVolsungs();
+        //testA_PAINLESS_GUIDE_TO_CRC_ERROR_DETECTION_ALGORITHMS();
     }   
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
@@ -194,8 +197,9 @@ public class Main {
     /**
      * This was used for testing purposes. When I read about the huffman compression
      * entropy kept coming up so I decided to see what the entropy of the files were that
-     * I collected for testing. I encluded the entropy of each above in the comments of their file names.
-     * The only changed was that I divided by file length instead of string length. 
+     * I collected for testing. I encluded the entropy of each above in the comments of their file names. 
+     * 
+     * https://courses.cs.washington.edu/courses/csep521/99sp/lectures/lecture11/sld020.htm
      */
     public static double getEntropy(String s){
         double entropy = 0.0d;
@@ -209,10 +213,105 @@ public class Main {
         }
         return entropy;
     }
-    public static void fullUnitTest() {
-        
+    /**
+     * TODO: Not all swedish characters are being taken care of.
+     */
+    public static void testTheStoryOfGostaBerling() throws IOException {
+        System.out.println();
+        long startTime = System.currentTimeMillis();
+        String message = new String(Files.readAllBytes(Paths.get(TheStoryOfGostaBerling)));
+        CodingTree c = new CodingTree(message);
+        Files.write(Paths.get(codes), c.codes.toString().getBytes());
+        BitSet bs = new BitSet(c.bits.length());
+        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
+        Files.write(Paths.get(compressed), bs.toByteArray());
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        Files.write(Paths.get("./decompressed.txt"), c.decoded.getBytes());
+        double compressed = Files.size(Paths.get("compressed.txt"));
+        System.out.println("Compressed file size: " +  compressed + " bytes");
+        System.out.println("Running Time: " + duration + " milliseconds");
+        System.out.println("The entropy of the original file is: " + getEntropy(message));
     }
     /**
-     * TODO: write unit-test for full file
+     * TODO: Fix 5 removals 5 additions. Not taking care of all UTF-8 characters properly
      */
+    public static void testEpicOfGilgamesh() throws IOException {
+        System.out.println();
+        long startTime = System.currentTimeMillis();
+        String message = new String(Files.readAllBytes(Paths.get(EpicOfGilgamesh)));
+        CodingTree c = new CodingTree(message);
+        Files.write(Paths.get(codes), c.codes.toString().getBytes());
+        BitSet bs = new BitSet(c.bits.length());
+        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
+        Files.write(Paths.get(compressed), bs.toByteArray());
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        Files.write(Paths.get("./decompressed.txt"), c.decoded.getBytes());
+        double compressed = Files.size(Paths.get("compressed.txt"));
+        System.out.println("Compressed file size: " +  compressed + " bytes");
+        System.out.println("Running Time: " + duration + " milliseconds");
+        System.out.println("The entropy of the original file is: " + getEntropy(message));
+    }
+    /**
+     * TODO: Fix 468 removals 512 additions
+     */
+    public static void testOsMaias() throws IOException {
+        System.out.println();
+        long startTime = System.currentTimeMillis();
+        String message = new String(Files.readAllBytes(Paths.get(OsMaias)));
+        CodingTree c = new CodingTree(message);
+        Files.write(Paths.get(codes), c.codes.toString().getBytes());
+        BitSet bs = new BitSet(c.bits.length());
+        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
+        Files.write(Paths.get(compressed), bs.toByteArray());
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        Files.write(Paths.get("./decompressed.txt"), c.decoded.getBytes());
+        double compressed = Files.size(Paths.get("compressed.txt"));
+        System.out.println("Compressed file size: " +  compressed + " bytes");
+        System.out.println("Running Time: " + duration + " milliseconds");
+        System.out.println("The entropy of the original file is: " + getEntropy(message));
+    }
+    /**
+     * The input file and output file are oddly enough identical. I can apparently handle old swedish
+     * but modern swedish texts are an issue.
+     */
+    public static void testTheStoryOfTheVolsungs() throws IOException {
+        System.out.println();
+        long startTime = System.currentTimeMillis();
+        String message = new String(Files.readAllBytes(Paths.get(TheStoryOfTheVolsungs)));
+        CodingTree c = new CodingTree(message);
+        Files.write(Paths.get(codes), c.codes.toString().getBytes());
+        BitSet bs = new BitSet(c.bits.length());
+        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
+        Files.write(Paths.get(compressed), bs.toByteArray());
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        Files.write(Paths.get("./decompressed.txt"), c.decoded.getBytes());
+        double compressed = Files.size(Paths.get("compressed.txt"));
+        System.out.println("Compressed file size: " +  compressed + " bytes");
+        System.out.println("Running Time: " + duration + " milliseconds");
+        System.out.println("The entropy of the original file is: " + getEntropy(message));
+    }
+    /**
+     * The input file and output file are oddly enough identical. 
+     */
+    public static void testA_PAINLESS_GUIDE_TO_CRC_ERROR_DETECTION_ALGORITHMS() throws IOException {
+        System.out.println();
+        long startTime = System.currentTimeMillis();
+        String message = new String(Files.readAllBytes(Paths.get(A_PAINLESS_GUIDE_TO_CRC_ERROR_DETECTION_ALGORITHMS)));
+        CodingTree c = new CodingTree(message);
+        Files.write(Paths.get(codes), c.codes.toString().getBytes());
+        BitSet bs = new BitSet(c.bits.length());
+        for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
+        Files.write(Paths.get(compressed), bs.toByteArray());
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        Files.write(Paths.get("./decompressed.txt"), c.decoded.getBytes());
+        double compressed = Files.size(Paths.get("compressed.txt"));
+        System.out.println("Compressed file size: " +  compressed + " bytes");
+        System.out.println("Running Time: " + duration + " milliseconds");
+        System.out.println("The entropy of the original file is: " + getEntropy(message));
+    }
 } 

@@ -1,12 +1,8 @@
 import java.util.Comparator;
-import java.util.AbstractQueue;
 import java.util.Queue;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-/********************************
- * EXTRA CREDIT****************************
+/********************************EXTRA CREDIT****************************
  * 
  * @author Jake McKenzie
  * @param T generic type
@@ -16,7 +12,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     /**
      * @param queue the priority queue
      */
-    public List<T> queue;
+    public ArrayList<T> queue;
     /**
      * @param comparator reference for queue
      */
@@ -47,7 +43,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     }
 
     /**
-     * Returns back the size of the current queue. TODO: fill in the size() function
+     * Returns back the size of the current queue.
      */
 
     public int size() {
@@ -57,7 +53,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     /**
      * Constructor that builds queue given a limit.
      * 
-     * @param limit the maximum size of the queue
+     * @param z the maximum size of the queue
      * @param c     reference for the queue
      */
     public MyPriorityQueue(int z, Comparator<T> c) {
@@ -73,9 +69,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     public void offer(T t) {
         queue.add(t);
         size++;
-        for (int k = size; k > 1; k >>= 1)
-            if (t.compareTo(queue.get(k >> 1)) < 0)
-                swap(k, k >> 1);
+        for (int k = size; k > 1; k >>= 1) if (t.compareTo(queue.get(k >> 1)) < 0) swap(k, k >> 1);
     }
 
     /**
@@ -91,22 +85,20 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * Retrieves and removes the head of the queue, or returns null if this queue is
      * empty.
      * 
-     * @return The smalled value in the queue, if the queue is empty this is null.
+     * @return Retrieves and removes the head of this queue, or returns null if this queue is empty.
      */
     public T poll() {
-        if (queue.size() < 1) {
-            return null;
-        }
+        if (queue.size() < 1) return null;
         T t = queue.get(1);
         queue.set(1, queue.get(size));
         queue.remove(size--);
         if (size > 1) {
             T P = queue.get(1);
-            int C = 1;
             int i = 1;
-            while ((i << 1) <= size) {
+            int C = i;
+            while (size >= (i << 1)) {
                 C = i << 1;
-                if (C < size && (queue.get(C).compareTo(queue.get(C + 1))) > 0) C++;
+                if (C < size && (queue.get(C + 1).compareTo(queue.get(C))) < 0) C++;
                 if (P.compareTo(queue.get(C)) > 0) {
                     swap(i, C);
                     i = C;
@@ -117,7 +109,8 @@ public class MyPriorityQueue<T extends Comparable<T>> {
         }
         return t;
     }
-
+    
+    
     /**
      * @return Returns back the current node for peeking.
      */
@@ -153,11 +146,11 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     }
 
     /**
-     * Compares values of two nodes.
+     * Compares values of two nodes. This works faster than the built in compare.
      * 
      * @return the comparison on the left and right child
      */
-    // /@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public int compare(T L, T R) {
         if (comparator != null) {
             return comparator.compare(L, R);
