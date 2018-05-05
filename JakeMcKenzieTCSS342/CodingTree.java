@@ -115,7 +115,7 @@ public class CodingTree {
         } 
     }
 
-    public void convertToBinary(String book) {
+    private void convertToBinary(String book) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < book.length(); i++) sb.append(codes.get(book.charAt(i)));
 		bits = sb.toString();

@@ -88,19 +88,17 @@ public class MyPriorityQueue<T extends Comparable<T>> {
      * @return the head of the queue
      */
     public T poll() {
-        if (size == 0) return null;
+        if (queue.size() < 1) return null;
         T t = queue.get(1);
         queue.set(1, queue.get(size));
         queue.remove(size--);
-        if (size == 1) {
-            return t;
-        } else {
+        if (size > 1) {
             T P = queue.get(1);
             int i = 1;
             int C = i;
             while (size >= (i << 1)) {
                 C = i << 1;
-                if ((queue.get(C + 1).compareTo(queue.get(C))) < 0) C++;
+                if (C < size && (queue.get(C + 1).compareTo(queue.get(C))) < 0) C++;
                 if (P.compareTo(queue.get(C)) > 0) {
                     swap(i, C);
                     i = C;
@@ -108,8 +106,8 @@ public class MyPriorityQueue<T extends Comparable<T>> {
                     break;
                 }
             }
-            return t;
         }
+        return t;
     }
     
     
