@@ -175,7 +175,7 @@ public class Main {
         System.out.println(testCodingTree.codes.toString());
         System.out.println(testCodingTree.bits.toString());
         System.out.println(testCodingTree.decoded.toString());
-        System.out.println("This tests the length of the fibonacciStrings(2) through fibonacciStrings(35) are the same length: ");
+        System.out.println("This tests the length of the fibonacciStrings(2) through fibonacciStrings(25) are the same length: ");
         for (int i = 2; i < 25; i++) {
             CodingTree testLengthCodingTree = new CodingTree(fibonacciStrings(i));
             // /System.out.println("fibonacciStrings(" + i + ") = " + fibonacciStrings(i) + ", length = " + fibonacciStrings(i).length());
